@@ -7,15 +7,19 @@ import com.food.ordering.system.order.service.domain.valueobject.OrderItemId;
 
 public class OrderItem extends BaseEntity<OrderItemId> {
     private OrderId orderId;
+    private final Product product;
+    private final int quantity;
+    private final Money price;
+    private final Money subTotal;
 
     void initializeOrderItem(OrderId orderId, OrderItemId orderItemId) {
         this.orderId = orderId;
         super.setId(orderItemId);
     }
 
-    boolean isPriceValid(){
+    boolean isPriceValid() {
         return price.isGreaterThanZero() &&
-                price.equals(product.getPrice())&&
+                price.equals(product.getPrice()) &&
                 price.multiply(quantity).equals(subTotal);
     }
 
@@ -26,6 +30,11 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         price = builder.price;
         subTotal = builder.subTotal;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     public OrderId getOrderId() {
         return orderId;
@@ -47,12 +56,6 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         return subTotal;
     }
 
-    private final Product product;
-    private final  int quantity;
-    private final Money price;
-    private final Money subTotal;
-
-
     public static final class Builder {
         private OrderItemId orderItemId;
         private Product product;
@@ -61,10 +64,6 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         private Money subTotal;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder orderItemId(OrderItemId val) {
